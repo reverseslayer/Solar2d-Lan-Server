@@ -8,14 +8,17 @@ function scene:create( event )
 
     function buildUsers(userList)
         if type(userList) == "string" then
-            local x = Button(userList, nil, UDim2.new(0.9, 0, 0, 70), UDim2.new(0.05, 0, 0, 80) )
+            local x = Button(userList, nil, UDim2.new(0.9, 0, 0, 70), UDim2.new(0.05, 0, 0, 10) )
             table.insert( buttons, x )
         else
             for i,v in pairs(buttons) do
                 display.remove(v)
             end
             for i,v in pairs(userList) do
-                local x = Button(v, nil, UDim2.new(0.9, 0, 0, 70), UDim2.new(0.05, 0, 0, (i*80) ))
+                local x = Button(v, nil, UDim2.new(0.9, 0, 0, 70), UDim2.new(0.05, 0, 0, (i*80)-70 ))
+                if v == Data.UserName then
+                    x:setFillColor( 0, 1, 0) 
+                end
                 table.insert( buttons, x )
             end
         end
@@ -34,11 +37,10 @@ function scene:create( event )
     		GotoScene( "scenes.JoinMenu", "fade", 0, { nil } )
     	end
     end
-    local LeaveButton = Button("Leave Lobby", onLeaveClick, UDim2.new(0.9, 0, 0.2, 0), UDim2.new(0.05, 0, 0.8, 0))
+    local LeaveButton = Button("Leave Lobby", onLeaveClick, UDim2.new(0.9, 0, 0.2, 0), UDim2.new(0.05, 0, 0.7, 0))
     table.insert( sceneGroup, LeaveButton )
 
-    Data.Connection.Send("SetUserName", {"reverseslayer"}) -- Sets the username and tells the server you joined successfully server will fire back "UserJoined" with a list of all the other users in the server
-
+    Data.Connection.Send("SetUserName", Data.UserName) -- Sets the username and tells the server you joined successfully server will fire back "UserJoined" with a list of all the other users in the server
 end
 
 function scene:destroy( event ) -- Use to reset everything back to default values

@@ -5,9 +5,15 @@ system.activate( "multitouch" )
 composer = require("composer")
 widget = require "widget"
 UDim2 = require("bin.UDim2")
+Vector2 = require("bin.Vector2")
+
+local x = UDim2.new(1,1,1,1)
+x.xScale = 4
 
 composer.recycleAutomatically = true
 composer.recycleOnSceneChange = true
+
+system.activate( "multitouch" )
 
 display.setDefault( "anchorX", 0 )
 display.setDefault( "anchorY", 0 )
@@ -24,9 +30,6 @@ Data = {
 
 -- Global functions
 function Button(Text, EventHandler, size, position)
-    local size = size.out()
-    local position = position.out()
-
     local Butn = widget.newButton({
         label = Text,
         onEvent = EventHandler,

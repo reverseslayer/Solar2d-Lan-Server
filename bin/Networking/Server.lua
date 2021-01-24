@@ -1,4 +1,5 @@
 local socket = require( "socket" )
+local JSON = require("json")
 
 local function getIP()
     local s = socket.udp()
@@ -191,19 +192,19 @@ Server = {}
                             end
 
                             if Funct == "SetUserName" then
-                                Ctrl.clientBuffer[FromUID]["UserName"] = Args[1]
-                                if Ctrl.onReceive ~= nil then Ctrl.onReceive( "UserJoined", Args, Args[1] ) end
+                                Ctrl.clientBuffer[FromUID]["UserName"] = Args
+                                if Ctrl.onReceive ~= nil then Ctrl.onReceive( "UserJoined", Args, Args ) end
                             else
                                 if ToUID == "." then -- The Send All tag
                                     for i,v in pairs(Ctrl.clientBuffer) do
                                         if client ~= v["Socket"] then
                                             table.insert( v["SendBuffer"], BuildFunction(Funct, Args) )
                                         end
-                                    end                       
-                                    if Ctrl.onReceive ~= nil then Ctrl.onReceive( Funct, Args, Ctrl.clientBuffer[FromID]["UserName"] ) end
+                                    end
+                                    if Ctrl.onReceive ~= nil then Ctrl.onReceive( Funct, Args, Ctrl.clientBuffer[FromUID]["UserName"] ) end
                                 else
                                     if UID == Ctrl.UID then
-                                        if Ctrl.onReceive ~= nil then Ctrl.onReceive( Funct, Args, Ctrl.clientBuffer[FromID]["UserName"] ) end
+                                        if Ctrl.onReceive ~= nil then Ctrl.onReceive( Funct, Args, Ctrl.clientBuffer[FromUID]["UserName"] ) end
                                     else
                                         table.insert( Ctrl.clientBuffer[UID]["SendBuffer"], BuildFunction(Funct, Args) )
                                     end
@@ -212,7 +213,7 @@ Server = {}
                         end
                     end
                 end
-     
+                
                 -- Send to the client
                 for ID, Connection in pairs( Ctrl.clientBuffer ) do
                     for i, msg in pairs( Connection["SendBuffer"] ) do

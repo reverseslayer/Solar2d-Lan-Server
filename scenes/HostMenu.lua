@@ -13,18 +13,21 @@ function scene:create( event )
     
     local users = {Data.UserName} -- Place to store user names of connected users, with hosts username defined 
 
-    local x = Button(users[1], nil, UDim2.new(0.9, 0, 0, 70), UDim2.new(0.05, 0, 0, 80 ))
+    local x = Button(users[1], nil, UDim2.new(0.9, 0, 0, 70), UDim2.new(0.05, 0, 0, 10 ))
     x:setFillColor( 0, 1, 0) 
     table.insert( sceneGroup.Buttons, x )
 
     function Data.Connection.onReceive(funct, args, from) -- When the server receives data this event fires
         if funct == "UserJoined" then -- when the SetUserName function is fired
-            table.insert( users, args[1] )
+            table.insert( users, args )
             for i,v in pairs(sceneGroup.Buttons) do
                 display.remove(v)
             end
             for i, v in pairs(users) do
-                local x = Button(v, nil, UDim2.new(0.9, 0, 0, 70), UDim2.new(0.05, 0, 0, (i*80) ))
+                local x = Button(v, nil, UDim2.new(0.9, 0, 0, 70), UDim2.new(0.05, 0, 0, (i*80) - 70 ))
+                if v == Data.UserName then
+                    x:setFillColor( 0, 1, 0) 
+                end
                 table.insert( sceneGroup.Buttons, x )
             end
             Data.Connection.Send("UserJoined", users) -- Send the full list of all connected users back to each user
@@ -72,7 +75,6 @@ function scene:destroy( event ) -- Use to reset everything back to default value
     end
 
     for i,v in pairs(sceneGroup.Buttons) do
-        print("fired on", v)
         display.remove(v)
     end
  	

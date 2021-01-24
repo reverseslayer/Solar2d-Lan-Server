@@ -1,4 +1,5 @@
 local socket = require( "socket" )  -- Connection to socket library
+local JSON = require("json")
 
 local function connectToServer( ip, port )
     local sock, err = socket.connect( ip, port )
@@ -43,7 +44,7 @@ local function BuildFunction(Function, Args)
         builder = string.sub( builder, 1, string.len( builder ) - 1 )
         builder = builder.."\n"
     else
-        builder = builder..Args
+        builder = builder..Args.."\n"
     end
     return builder
 end

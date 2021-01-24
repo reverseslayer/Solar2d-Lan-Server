@@ -27,7 +27,7 @@ function scene:create( event )
     function onBackClick(event)
         if (event.phase == "ended") then
             Client.StopFind()
-            GotoScene( "scenes.MainMene", "fade", 0, { nil } ) -- Goto the game scene
+            GotoScene( "scenes.MainMenu", "fade", 0, { nil } ) -- Goto the game scene
         end
     end
 
